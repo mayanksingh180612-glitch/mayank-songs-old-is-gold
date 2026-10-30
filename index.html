@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayank Music World</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:#090914;color:white;
+  font-family:Arial,sans-serif;
+}
+header{
+  height:75px;background:#111122;
+  display:flex;align-items:center;
+  justify-content:space-between;padding:0 6%;
+  position:sticky;top:0;z-index:10;
+  border-bottom:1px solid #292943;
+}
+.logo{font-size:24px;font-weight:bold;color:#a970ff}
+.logo span{color:#fff}
+nav a{color:#ddd;text-decoration:none;margin:12px}
+nav a:hover{color:#ae79ff}
+.hero{
+  padding:65px 7%;
+  background:linear-gradient(120deg,#251044,#10102a,#35104d);
+  display:flex;align-items:center;
+  justify-content:space-between;gap:30px;
+  flex-wrap:wrap;
+}
+.hero h1{font-size:48px;margin-bottom:15px}
+.hero h1 span{color:#c28cff}
+.hero p{color:#d1c9df;line-height:1.7}
+.hero button,.play{
+  background:#a34dff;color:white;
+  border:0;padding:13px 25px;
+  border-radius:25px;cursor:pointer;
+  margin-top:20px;font-weight:bold;
+}
+.hero-art{
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,#e0a0ff,#8c35db,#30104b);
+  display:grid;place-items:center;
+  font-size:95px;
+  box-shadow:0 0 60px #963cff;
+}
+.search-area{padding:30px 6% 10px}
+.search-area input{
+  width:100%;padding:17px;
+  border-radius:30px;border:1px solid #444;
+  background:#171729;color:white;
+  font-size:16px;outline:none;
+}
+.section{padding:30px 6%}
+.section h2{margin-bottom:22px;font-size:25px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(175px,1fr));
+  gap:20px;
+}
+.card{
+  background:#171728;padding:15px;
+  border-radius:17px;transition:.3s;
+  border:1px solid #27273d;
+}
+.card:hover{
+  transform:translateY(-7px);
+  border-color:#a34dff;
+  box-shadow:0 8px 30px #8e32ff22;
+}
+.cover{
+  height:145px;border-radius:12px;
+  display:grid;place-items:center;
+  font-size:60px;margin-bottom:13px;
+}
+.card h3{font-size:17px;margin-bottom:7px}
+.card p{font-size:13px;color:#aaa}
+.card button{
+  border:0;background:#943fff;
+  color:white;padding:9px 14px;
+  border-radius:20px;cursor:pointer;
+  margin-top:12px;
+}
+.card .fav{
+  background:#292940;margin-left:5px;
+}
+.categories{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.categories button{
+  padding:10px 18px;border-radius:25px;
+  border:1px solid #55406e;
+  background:#1b1930;color:white;cursor:pointer;
+}
+.categories button.active{
+  background:#913bff;
+}
+footer{
+  text-align:center;padding:30px;
+  background:#111122;color:#aaa;
+  margin-top:40px;
+}
+#player{
+  position:fixed;bottom:0;left:0;width:100%;
+  padding:15px 6%;background:#211534;
+  border-top:1px solid #8042b8;
+  display:none;justify-content:space-between;
+  align-items:center;z-index:20;gap:10px;
+}
+#player a{color:#d8aaff}
+@media(max-width:650px){
+ header{padding:0 4%}
+ nav a{margin:4px;font-size:12px}
+ .hero h1{font-size:35px}
+ .hero-art{width:150px;height:150px;font-size:65px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">🎵 MAYANK <span>MUSIC</span></div>
+ <nav>
+  <a href="#home">Home</a>
+  <a href="#songs">Songs</a>
+  <a href="#artists">Artists</a>
+ </nav>
+</header>
+
+<section class="hero" id="home">
+ <div>
+  <h1>Feel The <span>Music</span> 🎧</h1>
+  <p>Welcome to Mayank Music World.<br>
+  Bollywood, Punjabi, English and World Music.<br>
+  Your music, your world!</p>
+  <button onclick="document.getElementById('songs').scrollIntoView({behavior:'smooth'})">
+   Explore Music →
+  </button>
+ </div>
+ <div class="hero-art">🎧</div>
+</section>
+
+<div class="search-area">
+ <input id="search" type="text"
+ placeholder="🔍 Search songs or singers..."
+ oninput="renderSongs()">
+</div>
+
+<section class="section" id="artists">
+ <h2>⭐ Famous Singers</h2>
+ <div class="grid" id="artistGrid"></div>
+</section>
+
+<section class="section" id="songs">
+ <h2>🎶 Music Collection</h2>
+ <div class="categories">
+  <button class="active" onclick="setCategory('All',this)">All</button>
+  <button onclick="setCategory('Old Hindi',this)">Old Hindi</button>
+  <button onclick="setCategory('Bollywood',this)">Bollywood</button>
+  <button onclick="setCategory('Punjabi',this)">Punjabi</button>
+  <button onclick="setCategory('English',this)">English</button>
+  <button onclick="setCategory('World',this)">World</button>
+  <button onclick="setCategory('Romantic',this)">Romantic</button>
+  <button onclick="setCategory('Favourite',this)">❤️ Favourites</button>
+ </div>
+ <div class="grid" id="songGrid"></div>
+</section>
+
+<div id="player">
+ <div>
+  <strong id="nowPlaying">Select a song</strong>
+  <p style="font-size:12px;color:#aaa">Mayank Music World</p>
+ </div>
+ <a id="youtubeLink" target="_blank" rel="noopener">▶ Listen on YouTube</a>
+</div>
+
+<footer>
+ <h2>🎵 MAYANK MUSIC WORLD</h2>
+ <p>Music connects the world ❤️</p>
+ <p style="margin-top:12px">Made with ❤️ by Mayank</p>
+</footer>
+
+<script>
+const artists=[
+ {name:"Kishore Kumar",emoji:"🎙️",color:"#70402b"},
+ {name:"Sidhu Moose Wala",emoji:"🎤",color:"#653c24"},
+ {name:"Atif Aslam",emoji:"🎧",color:"#234d71"},
+ {name:"Arijit Singh",emoji:"🎵",color:"#49366d"},
+ {name:"Lata Mangeshkar",emoji:"🌸",color:"#87436e"},
+ {name:"Sonu Nigam",emoji:"🎼",color:"#315e65"},
+ {name:"Mohammed Rafi",emoji:"🎙️",color:"#76552c"},
+ {name:"Shreya Ghoshal",emoji:"🎤",color:"#753a67"},
+ {name:"Taylor Swift",emoji:"🌟",color:"#673d62"},
+ {name:"Ed Sheeran",emoji:"🎸",color:"#8b512b"},
+ {name:"Justin Bieber",emoji:"🎧",color:"#354d7b"},
+ {name:"Michael Jackson",emoji:"👑",color:"#654a26"}
+];
+
+const songs=[
+ ["Mere Sapno Ki Rani","Kishore Kumar","Old Hindi","🎙️"],
+ ["Roop Tera Mastana","Kishore Kumar","Old Hindi","🎙️"],
+ ["Pal Pal Dil Ke Paas","Kishore Kumar","Old Hindi","❤️"],
+ ["Zindagi Ek Safar","Kishore Kumar","Old Hindi","🎵"],
+ ["Ek Ajnabee Haseena Se","Kishore Kumar","Old Hindi","🎶"],
+
+ ["295","Sidhu Moose Wala","Punjabi","🔥"],
+ ["So High","Sidhu Moose Wala","Punjabi","🎤"],
+ ["The Last Ride","Sidhu Moose Wala","Punjabi","🚘"],
+ ["Same Beef","Sidhu Moose Wala","Punjabi","👑"],
+ ["Levels","Sidhu Moose Wala","Punjabi","🔥"],
+
+ ["Tera Hone Laga Hoon","Atif Aslam","Romantic","❤️"],
+ ["Pehli Nazar Mein","Atif Aslam","Romantic","🌹"],
+ ["Jeena Jeena","Atif Aslam","Romantic","🎵"],
+ ["Tu Jaane Na","Atif Aslam","Romantic","💜"],
+
+ ["Tum Hi Ho","Arijit Singh","Bollywood","❤️"],
+ ["Kesariya","Arijit Singh","Bollywood","🌸"],
+ ["Channa Mereya","Arijit Singh","Bollywood","💔"],
+ ["Apna Bana Le","Arijit Singh","Bollywood","🎶"],
+
+ ["Lag Jaa Gale","Lata Mangeshkar","Old Hindi","🌹"],
+ ["Ajeeb Dastan Hai Yeh","Lata Mangeshkar","Old Hindi","🎙️"],
+
+ ["Kal Ho Naa Ho","Sonu Nigam","Bollywood","🎹"],
+ ["Abhi Mujh Mein Kahin","Sonu Nigam","Bollywood","❤️"],
+
+ ["Chaudhvin Ka Chand","Mohammed Rafi","Old Hindi","🌙"],
+ ["Baharon Phool Barsao","Mohammed Rafi","Old Hindi","🌸"],
+
+ ["Shape of You","Ed Sheeran","English","🎸"],
+ ["Perfect","Ed Sheeran","English","❤️"],
+ ["Blank Space","Taylor Swift","English","🌟"],
+ ["Love Story","Taylor Swift","English","💖"],
+ ["Baby","Justin Bieber","English","🎧"],
+ ["Billie Jean","Michael Jackson","World","👑"],
+ ["Heal the World","Michael Jackson","World","🌍"]
+].map((s,i)=>({id:i,name:s[0],artist:s[1],category:s[2],emoji:s[3]}));
+
+let category="All";
+let favourites=JSON.parse(localStorage.getItem("mayankFavs")||"[]");
+
+const artistGrid=document.getElementById("artistGrid");
+const songGrid=document.getElementById("songGrid");
+
+artistGrid.innerHTML=artists.map(a=>`
+ <div class="card">
+  <div class="cover" style="background:${a.color}">${a.emoji}</div>
+  <h3>${a.name}</h3>
+  <p>Popular Artist</p>
+  <button onclick="searchArtist('${a.name}')">Explore Songs</button>
+ </div>
+`).join("");
+
+function searchArtist(name){
+ document.getElementById("search").value=name;
+ category="All";
+ renderSongs();
+ document.getElementById("songs").scrollIntoView({behavior:"smooth"});
+}
+
+function setCategory(c,btn){
+ category=c;
+ document.querySelectorAll(".categories button")
+ .forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ renderSongs();
+}
+
+function playSong(song){
+ const query=encodeURIComponent(song.name+" "+song.artist+" official song");
+ const url="https://www.youtube.com/results?search_query="+query;
+ document.getElementById("nowPlaying").textContent=
+ song.name+" — "+song.artist;
+ document.getElementById("youtubeLink").href=url;
+ document.getElementById("player").style.display="flex";
+ window.open(url,"_blank");
+}
+
+function toggleFav(id){
+ if(favourites.includes(id)){
+  favourites=favourites.filter(x=>x!==id);
+ }else{
+  favourites.push(id);
+ }
+ localStorage.setItem("mayankFavs",JSON.stringify(favourites));
+ renderSongs();
+}
+
+function renderSongs(){
+ const q=document.getElementById("search").value.toLowerCase();
+
+ const filtered=songs.filter(s=>{
+  const match=(s.name+" "+s.artist+" "+s.category)
+    .toLowerCase().includes(q);
+  const cat=category==="All"||
+   (category==="Favourite"?favourites.includes(s.id):s.category===category);
+  return match&&cat;
+ });
+
+ songGrid.innerHTML=filtered.length?filtered.map(s=>`
+  <div class="card">
+   <div class="cover" style="background:linear-gradient(135deg,#38205c,#1b3556)">
+    ${s.emoji}
+   </div>
+   <h3>${s.name}</h3>
+   <p>${s.artist}</p>
+   <p style="margin-top:7px">${s.category}</p>
+   <button onclick="playSong(songs.find(x=>x.id===${s.id}))">▶ Play</button>
+   <button class="fav" onclick="toggleFav(${s.id})">
+    ${favourites.includes(s.id)?"❤️":"♡"}
+   </button>
+  </div>
+ `).join(""):"<p>No songs found. Try another search.</p>";
+}
+
+renderSongs();
+</script>
+</body>
+</html>
